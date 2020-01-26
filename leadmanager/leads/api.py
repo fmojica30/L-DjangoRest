@@ -4,8 +4,13 @@ from .serializers import LeadSerializer
 
 #Lead viewset
 class LeadViewSet(viewsets.ModelViewSet):
-  queryset = Lead.objects.all()
-  permission_classes = [
-    permissions.AllowAny
-  ]
-  serializer_class = LeadSerializer
+	permission_classes = [
+		permissions.IsAuthenticated
+	]
+	serializer_class = LeadSerializer
+
+	def get_queryset(self):
+		return self.request.user.leads.all()
+
+	def perform_create(self, serializer):
+		serialize.save(owner = self.request.user)
